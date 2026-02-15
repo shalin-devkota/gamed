@@ -5,6 +5,8 @@ from src.cli.validators import (
     validate_config_path,
 )
 from src.integrations.minecraft.minecraft import MinecraftGameServer
+from src.db.db_init import initialize_database
+import json
 
 registry = {
     "minecraft": MinecraftGameServer,
@@ -12,6 +14,7 @@ registry = {
 
 
 def main():
+    initialize_database()
     parser = create_parser()
     args = parser.parse_args()
 

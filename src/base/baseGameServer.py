@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod, abstractproperty
 import platform
+import os
+import json
 
 
 class BaseGameServer(ABC):
@@ -10,6 +12,14 @@ class BaseGameServer(ABC):
 
         self.config_path = config_path
         self.process = process
+        self.user_home = os.path.expanduser("~")
+
+        with open("config.json", "r") as f:
+            global_config = json.load(f)
+            base_directory = global_config.get("base_game_directory", self.user_home)
+
+            base_game_directory = os.path.join(base_directory, self.name)
+            self.base_game_directory = base_game_directory
 
     @abstractmethod
     def setup_environment(self):
