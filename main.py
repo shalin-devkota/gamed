@@ -1,46 +1,44 @@
-import argparse
+import sys
+from src.cli.parser import create_parser
+from src.cli.validators import (
+    validate_game,
+    validate_binary_path,
+    validate_config_path,
+)
+from src.integrations.minecraft.minecraft import MinecraftGameServer
 
-BANNER = r"""
-   ____    _    __  __ _____ ____  
-  / ___|  / \  |  \/  | ____|  _ \ 
- | |  _  / _ \ | |\/| |  _| | | | |
- | |_| |/ ___ \| |  | | |___| |_| |
-  \____/_/   \_\_|  |_|_____|____/ 
-
-              G A M E D
-         (gamedamon CLI tool)
-"""
+registry = {
+    "minecraft": MinecraftGameServer,
+}
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="GAMED - Gamedamon CLI Tool",
-        formatter_class=argparse.RawTextHelpFormatter
-    )
-    
-    parser.add_argument(
-        "-b", "--bin",
-        type=str,
-        help="Include binary path here"
-    )
-
-    parser.add_argument(
-        "-c", "--config",
-        type=str,
-        help="Include config path here"
-    )
-    
+    parser = create_parser()
     args = parser.parse_args()
 
-    if not any(vars(args).values()):
-        print(BANNER)
-        print("Available Commands:")
-        print("  -b, --bin     Include binary path here")
-        print("  -c, --config  Include config path here")
-        return
+    try:
+        validate_game(args.game, registry)
+        validate_binary_path(args.bin)
+        validate_config_path(args.config)
+    except ValueError as e:
+        print(f"Error occured: {e}")
+        sys.exit(1)
 
-    print("\nParsed Values:")
-    print(f"  Binary path : {args.bin}")
-    print(f"  Config path : {args.config}")
+    print("Parsed Values:")
+    print(f"  Game       : {args.game}")
+    print(f"  Binary path: {args.bin}")
+    print(f"  Config path: {args.config}")
+
+    GameServer = registry[args.game.lower()]
+    server = GameServer(
+        name=args.game,
+        binary_path=args.bin,
+        config_path=args.config,
+    )
+    if args.setup_environment:
+        server.setup_environment()
+
+    server.start_server()
+    print("\nServer instance created successfully.")
 
 if __name__ == "__main__":
     main()
