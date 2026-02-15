@@ -9,11 +9,15 @@ from .environments.windows import setup_windows_envrionment
 class MinecraftGameServer(BaseGameServer):
     START_TEMPLATE = "java -Xmx{max_memory}G -Xms{min_memory}G -jar {jar} nogui"
 
-    def __init__(self, name, binary_path, config_path):
-        super().__init__(name=name, binary_path=binary_path, config_path=config_path)
+    def __init__(self, name, config_path):
+        super().__init__(name=name, config_path=config_path)
         with open(self.config_path, "r") as f:
             config = json.load(f)
-
+        self.binary_path = config.get("binary_path", None)
+        if not self.binary_path:
+            raise ValueError(
+                "Config must include 'binary_path' for the Minecraft server jar."
+            )
         self.max_memory = config.get("max_memory", 2)
         self.min_memory = config.get("min_memory", 1)
 
@@ -38,6 +42,7 @@ class MinecraftGameServer(BaseGameServer):
     def start_server(self):
         if self.run_preflight():
             self.process = subprocess.Popen(self.start_string, shell=True)
+            print(f"Started Minecraft server with PID: {self.process.pid}")
             return self.process
         else:
             print("Preflight checks failed. Server not started.")

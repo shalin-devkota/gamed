@@ -5,9 +5,9 @@ import platform
 class BaseGameServer(ABC):
     SUPPORTED_PLATFORMS = ["windows", "linux"]
 
-    def __init__(self, name, binary_path, config_path, process=None):
+    def __init__(self, name, config_path, process=None):
         self.name = name
-        self.binary_path = binary_path
+
         self.config_path = config_path
         self.process = process
 

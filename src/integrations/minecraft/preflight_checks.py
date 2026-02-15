@@ -1,6 +1,7 @@
-def system_has_java():
-    import subprocess
+import subprocess
 
+
+def system_has_java():
     try:
         result = subprocess.run(
             ["java", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE

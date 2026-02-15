@@ -1,6 +1,7 @@
 import os
 import json
 
+
 def validate_game(game_name: str, registry: dict):
     if game_name.lower() not in registry:
         raise ValueError(
@@ -8,9 +9,6 @@ def validate_game(game_name: str, registry: dict):
             f"Available games: {', '.join(registry.keys())}"
         )
 
-def validate_binary_path(path: str):
-    if not os.path.isfile(path):
-        raise ValueError(f"Binary path '{path}' does not exist or is not a file.")
 
 def validate_config_path(path: str):
     if not os.path.isfile(path):
