@@ -26,6 +26,7 @@ class MinecraftGameServer(BaseGameServer):
     def run_preflight(self):
         if not system_has_java():
             raise EnvironmentError("Java is not installed or not found in PATH.")
+        return True
 
     def setup_environment(self):
         platform = super().setup_environment()
