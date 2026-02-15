@@ -19,4 +19,4 @@ The project is designed to simplify server setup, handle environment requirement
 
 ## License
 
-MIT License © 2026 Shalin Devkota, Saurava Parajulee
+MIT License © 2026 Shalin Devkota, Saurav Parajulee
