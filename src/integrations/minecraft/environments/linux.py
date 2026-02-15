@@ -6,7 +6,7 @@ def setup_java():
         print("Java is already installed.")
         return
 
-    print("Java is not installed. Installing OpenJDK 17...")
+    print("Java is not installed. Installing OpenJDK 25...")
     
     try:
         subprocess.run(
@@ -15,7 +15,7 @@ def setup_java():
         )
 
         subprocess.run(
-            ["sudo", "apt", "install", "-y", "openjdk-17-jdk"],
+            ["sudo", "apt", "install", "-y", "openjdk-25-jdk"],
             check=True
         )
 
