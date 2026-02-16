@@ -6,7 +6,6 @@ from src.cli.validators import (
 )
 from src.integrations.minecraft.minecraft import MinecraftGameServer
 from src.db.db_init import initialize_database
-import json
 
 registry = {
     "minecraft": MinecraftGameServer,

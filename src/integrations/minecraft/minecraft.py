@@ -56,6 +56,7 @@ class MinecraftGameServer(BaseGameServer):
     def start_server(self):
         self.setup_game_directory()
         if self.run_preflight():
+
             self.process = subprocess.Popen(
                 self.start_string,
                 shell=True,
