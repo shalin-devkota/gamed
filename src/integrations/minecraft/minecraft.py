@@ -14,19 +14,9 @@ class MinecraftGameServer(BaseGameServer):
         super().__init__(name=name, config_path=config_path)
         with open(self.config_path, "r") as f:
             config = json.load(f)
-        self.binary_path = config.get("binary_path", None)
-        if not self.binary_path:
-            raise ValueError(
-                "Config must include 'binary_path' for the Minecraft server jar."
-            )
+
         self.max_memory = config.get("max_memory", 2)
         self.min_memory = config.get("min_memory", 1)
-        instance_name = config.get(
-            "instance_name", None
-        )  # Todo : handle none later, maybe auto gen a instance name.
-        self.directory = os.path.join(
-            self.base_game_directory, instance_name
-        )  # TODO: handle none here too
 
     @property
     def start_string(self):
@@ -46,17 +36,8 @@ class MinecraftGameServer(BaseGameServer):
         else:
             setup_linux_environment()
 
-    def setup_game_directory(self):
-        if not os.path.exists(self.directory):
-            os.makedirs(self.directory)
-            print(f"Created game directory at: {self.directory}")
-        else:
-            print(f"Game directory already exists at: {self.directory}")
-
-    def start_server(self):
-        self.setup_game_directory()
+    def _start_server(self, gameserver):
         if self.run_preflight():
-
             self.process = subprocess.Popen(
                 self.start_string,
                 shell=True,

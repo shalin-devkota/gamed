@@ -83,6 +83,61 @@ def get_gameserver_by_instance_name(instance_name: str) -> Optional[GameServer]:
         close_db_session(session)
 
 
+def get_or_create_gameserver(
+    game_name: str,
+    instance_name: str,
+    directory: str,
+    config_path: str,
+) -> Optional[GameServer]:
+    """
+    Get a game server by instance name, or create it if it doesn't exist.
+
+    This is useful when starting a server - it ensures the server entry exists in the DB
+    and returns the entry for use in the startup process.
+
+    Args:
+        game_name: Name of the game
+        instance_name: Unique name for the server instance
+        directory: Directory path of the server
+        config_path: Path to the configuration file
+
+    Returns:
+        GameServer object if found or created successfully, None if failed
+    """
+    session = get_db_session()
+    try:
+        # Check if server already exists
+        game_server = (
+            session.query(GameServer)
+            .filter(GameServer.instance_name == instance_name)
+            .first()
+        )
+
+        if game_server:
+            # Server exists, return it
+            return game_server
+        else:
+            # Server doesn't exist, create it
+            game_server = GameServer(
+                game_name=game_name,
+                instance_name=instance_name,
+                directory=directory,
+                config_path=config_path,
+                status="offline",
+            )
+            session.add(game_server)
+            session.commit()
+            session.refresh(game_server)
+            print(f"Created new game server entry: {instance_name}")
+            return game_server
+    except SQLAlchemyError as e:
+        session.rollback()
+        print(f"Error getting or creating game server: {e}")
+        return None
+    finally:
+        close_db_session(session)
+
+
 def get_all_gameservers() -> List[GameServer]:
     """
     Get all game servers.

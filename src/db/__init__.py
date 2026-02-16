@@ -6,13 +6,13 @@ from .database import (
     SessionLocal,
     get_db_session,
     close_db_session,
-    initialize_database,
 )
 from .models import GameServer
 from .db_gameserver import (
     register_gameserver,
     get_gameserver,
     get_gameserver_by_instance_name,
+    get_or_create_gameserver,
     get_all_gameservers,
     update_gameserver_status,
     delete_gameserver,
@@ -28,6 +28,7 @@ __all__ = [
     "register_gameserver",
     "get_gameserver",
     "get_gameserver_by_instance_name",
+    "get_or_create_gameserver",
     "get_all_gameservers",
     "update_gameserver_status",
     "delete_gameserver",
